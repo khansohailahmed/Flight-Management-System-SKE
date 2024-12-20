@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Flight Management System</title>
+        <style>
+            body {
+                margin: 0;
+                font-family: Arial, sans-serif;
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+            }
+
+            header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 15px 30px;
+                background-color: #fff;
+                border-bottom: 2px solid #f0f0f0;
+            }
+
+            .logo h1 {
+                color: #28a745;
+                font-weight: bold;
+            }
+
+            nav ul {
+                list-style: none;
+                display: flex;
+                gap: 20px;
+                margin: 0;
+                padding: 0;
+            }
+
+            nav ul li {
+                position: relative;
+            }
+
+            .dropdown-button {
+                background: none;
+                border: none;
+                color: #28a745;
+                font-size: 16px;
+                cursor: pointer;
+            }
+
+            .dropdown-button:hover {
+                color: #218838;
+            }
+
+            .dropdown {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                background-color: #fff;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                display: none;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                padding: 10px 0;
+            }
+
+            .dropdown li {
+                padding: 5px 20px;
+            }
+
+            .dropdown li a {
+                text-decoration: none;
+                color: #28a745;
+                font-size: 14px;
+            }
+
+            .dropdown li a:hover {
+                color: #218838;
+            }
+
+            .search-section {
+                padding: 20px 30px;
+                background-color: #f7f7f7;
+            }
+
+            .action-buttons {
+                display: flex;
+                justify-content: flex-start;
+                gap: 20px;
+                margin-bottom: 20px;
+            }
+
+            /* Matching "Payment Status" button style with "Login" button */
+            .action-button {
+                background: none; /* No background color */
+                border: none; /* No border */
+                color: #28a745; /* Green color for text */
+                font-size: 16px; /* Same font size */
+                cursor: pointer; /* Pointer cursor */
+            }
+
+            .action-button:hover {
+                color: #218838; /* Darker green on hover */
+            }
+
+            .search-section form {
+                display: flex;
+                gap: 15px;
+                flex-wrap: wrap;
+                align-items: center;
+            }
+
+            .search-section input,
+            .search-section select,
+            .search-section button {
+                padding: 10px;
+                font-size: 16px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+
+            .search-section button {
+                background-color: #28a745;
+                color: white;
+                cursor: pointer;
+            }
+
+            .search-section button:hover {
+                background-color: #218838;
+            }
+
+            .carousel {
+                position: relative;
+                margin: 20px 30px;
+                overflow: hidden;
+                max-width: 100%;
+                border-radius: 10px;
+            }
+
+            .carousel img {
+                width: 100%; /* Makes the image take full width of the container */
+                max-height: 500px; /* Sets a maximum height */
+                object-fit: cover; /* Ensures the image fits nicely without distortion */
+                display: none; /* Hides all images initially */
+                border-radius: 10px; /* Keeps rounded corners */
+            }
+
+            .carousel img.active {
+                display: block; /* Shows the currently active image */
+            }
+
+            footer {
+                text-align: center;
+                font-size: 14px;
+                color: #555;
+                margin: 20px 0;
+                border-top: 1px solid #ccc;
+                padding-top: 10px;
+                margin-top: auto;
+            }
+
+            footer a {
+                color: #28a745;
+                text-decoration: none;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <div class="logo">
+                <h1>SKE FLY</h1>
+            </div>
+            <nav>
+                <ul>
+                    
+                    <li>
+                        <button class="action-button" onclick="location.href = 'Userlogin.jsp'"> Login </button>
+                    </li>
+                    <li>
+                        <button class="dropdown-button">Flight Info</button>
+                        <ul class="dropdown">
+                            <li><a href="Flightdetails.jsp">Flight Details</a></li>
+                            <li><a href="BookFlight.jsp">Book Flight</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <button class="dropdown-button">Journey Details</button>
+                        <ul class="dropdown">
+                            <li><a href="PNRCheck.jsp">PNR Check</a></li>
+                            <li><a href="CancelTicket.jsp">Cancel Ticket</a></li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <button class="action-button" onclick="location.href = 'paymentStatusForm.jsp'">Payment Status</button>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
+        <div class="search-section">
+            <div class="action-buttons">
+                <button class="action-button" onclick="location.href = 'FlightStatus.jsp'">Flight Status</button>
+                <button class="action-button" onclick="location.href = 'Checkin.jsp'">Check-in</button>
+                <button class="action-button" onclick="location.href = 'ViewBoardingpass.jsp'">Boarding Pass</button>
+            </div>
+
+            <form action="searchFlights.jsp" method="GET">
+                <select name="from" required>
+                    <option value="" disabled selected>From</option>
+                    <option value="Mumbai">Mumbai</option>
+                    <option value="Delhi">Delhi</option>
+                    <option value="Bangalore">Bangalore</option>
+                    <option value="Kolkata">Kolkata</option>
+                    <option value="Chennai">Chennai</option>
+                    <option value="Goa">Goa</option>
+                    <option value="Pune">Pune</option>
+                    <option value="Hyderbad">Hyderbad</option>
+                </select>
+
+                <select name="to" required>
+                    <option value="" disabled selected>To</option>
+                    <option value="Mumbai">Mumbai</option>
+                    <option value="Delhi">Delhi</option>
+                    <option value="Bangalore">Bangalore</option>
+                    <option value="Kolkata">Kolkata</option>
+                    <option value="Chennai">Chennai</option>
+                    <option value="Goa">Goa</option>
+                    <option value="Pune">Pune</option>
+                    <option value="Hyderbad">Hyderbad</option>
+                </select>
+
+                <input type="date" name="departure_date" required>
+
+                <select name="passengers" required>
+                    <option value="" disabled selected>Passengers</option>
+                    <option value="1">1 Adult</option>
+                    <option value="2">2 Adults</option>
+                    <option value="3">3 Adults</option>
+                </select>
+
+                <select name="class" required>
+                    <option value="" disabled selected>Class</option>
+                    <option value="economy">Economy</option>
+                    <option value="business">Business</option>
+                </select>
+
+                <button type="submit">Search Flights</button>
+            </form>
+        </div>
+
+        <div class="carousel">
+            <img src="Images/1image.jpeg" alt="Image 1" class="active">
+            <img src="Images/2image.jpeg" alt="Image 2">
+            <img src="Images/3image.jpeg" alt="Image 3">
+            <img src="Images/4image.jpeg" alt="Image 4">
+            <img src="Images/5image.jpeg" alt="Image 5">
+        </div>
+
+        <footer>
+            <p>
+                Phone: 8291306367 | 
+                GitHub: <a href="https://github.com/khansohailahmed" target="_blank">khansohailahmed</a> | 
+                Email: <a href="mailto:khansohailtufailahmed@gmail.com">khansohailtufailahmed@gmail.com</a>
+            </p>
+        </footer>
+
+        <script>
+            // Dropdown menu toggling
+            document.querySelectorAll('.dropdown-button').forEach(button => {
+                button.addEventListener('click', function () {
+                    const dropdown = this.nextElementSibling;
+                    if (dropdown) {
+                        const isVisible = dropdown.style.display === 'block';
+                        document.querySelectorAll('.dropdown').forEach(d => d.style.display = 'none');
+                        dropdown.style.display = isVisible ? 'none' : 'block';
+                    }
+                });
+            });
+
+            // Close dropdown if clicked outside
+            document.addEventListener('click', function (event) {
+                if (!event.target.closest('.dropdown-button')) {
+                    document.querySelectorAll('.dropdown').forEach(dropdown => dropdown.style.display = 'none');
+                }
+            });
+
+            // Carousel functionality
+            let currentImageIndex = 0;
+            const images = document.querySelectorAll('.carousel img');
+            function changeImage() {
+                images[currentImageIndex].classList.remove('active');
+                currentImageIndex = (currentImageIndex + 1) % images.length;
+                images[currentImageIndex].classList.add('active');
+            }
+
+            setInterval(changeImage, 2500); // Change image every 3 seconds
+        </script>
+    </body>
+</html>
