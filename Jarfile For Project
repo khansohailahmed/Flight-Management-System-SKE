@@ -1,1 +1,13 @@
 
+
+- **MySQL Connector JAR** — Enables Java applications to connect and interact with MySQL databases.
+- **Servlet API JAR** — Provides classes and interfaces for handling HTTP requests and responses in Java web applications.
+- **JavaMail API JAR** — Allows sending automated emails (e.g., booking confirmation, notifications).
+- **Gson JAR** — Converts Java objects to JSON and vice versa, useful for API communication (like Stripe & chatbot).
+- **Stripe Java SDK JAR** — Integrates Stripe payment gateway for secure online transactions.
+- **Apache Commons Lang JAR** — Offers helper functions for string manipulation, object handling, and general utilities.
+- **Apache Commons Codec JAR** — Provides encoding and decoding utilities, useful for hashing and secure data handling.
+- **org.json JAR** — Simplifies working with JSON data structures in Java.
+- **Apache HTTP Client JAR** — Used for making HTTP requests to external services, such as chatbot APIs or payment systems.
+- **Apache HTTP Core JAR** — Supports lower-level HTTP transport and connection management.
+
