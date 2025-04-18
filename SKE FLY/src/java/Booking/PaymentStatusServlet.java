@@ -1,8 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package Booking;
+
 import com.stripe.Stripe;
 import com.stripe.model.PaymentIntent;
 import jakarta.servlet.ServletException;
