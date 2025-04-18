@@ -1,0 +1,109 @@
+####SKE AIRLINE SERVLET ####
+
+CREATE DATABASE User_Login;
+USE User_Login;
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- Unique user ID
+    username VARCHAR(50) NOT NULL UNIQUE,  -- Username (must be unique)
+    password VARCHAR(100) NOT NULL,  -- User password
+    name VARCHAR(100) NOT NULL,  -- Full name of the user
+    email VARCHAR(100) NOT NULL  -- User email address
+);
+
+DROP TABLE IF EXISTS flights;
+select * from users;
+
+DROP TABLE IF EXISTS flights;
+
+CREATE TABLE flights (
+    flight_id INT AUTO_INCREMENT PRIMARY KEY,
+    flight_number VARCHAR(20) NOT NULL,
+    airline VARCHAR(50) NOT NULL,
+    departure_airport VARCHAR(50) NOT NULL,
+    arrival_airport VARCHAR(50) NOT NULL,
+    departure_time VARCHAR(100),
+    arrival_time VARCHAR(100),
+    eco_price DECIMAL(10, 2) NOT NULL,
+    bus_price DECIMAL(10, 2) NOT NULL,
+    available_seats INT NOT NULL,
+    class VARCHAR(20) NOT NULL
+);
+
+INSERT INTO flights (flight_number, airline, departure_airport, arrival_airport, departure_time, arrival_time, eco_price, bus_price, available_seats, class)
+VALUES
+    ('AI101', 'Air India', 'Mumbai', 'Delhi', '06:00:00', '08:00:00', 4500.00, 9000, 150, 'Economy'),
+    ('6E302', 'IndiGo', 'Delhi', 'Bangalore', '10:00:00', '12:30:00', 5500.00, 15000, 120, 'Business'),
+    ('SG501', 'SpiceJet', 'Kolkata', 'Chennai', '15:00:00', '17:30:00', 4000.00, 7890, 100, 'Economy'),
+    ('G817', 'GoAir', 'Pune', 'Hyderabad', '08:30:00', '10:30:00', 3000.00, 9999, 200, 'Business'),
+    ('VTI44', 'Vistara', 'Mumbai', 'Goa', '207:00:00', '08:00:00', 2500.00, 8795, 50, 'Economy');
+select * from flights;
+    
+    
+CREATE TABLE customers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    nationality VARCHAR(50) NOT NULL,
+    dob DATE NOT NULL,
+    gender VARCHAR(10) NOT NULL,
+    aadhaar VARCHAR(12) NOT NULL,
+    phone VARCHAR(10) NOT NULL,
+    email VARCHAR(100) NOT NULL
+);
+SELECT * FROM customers WHERE aadhaar = '123456789123';
+
+select * from bookings;
+
+
+### 11/12/2024 ###
+
+
+USE User_Login;
+drop table passenger_details2;
+CREATE TABLE IF NOT EXISTS passenger_details (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    flight_number VARCHAR(50) NOT NULL,
+    airline VARCHAR(100) NOT NULL,
+    travel_date DATE NOT NULL,
+    from_location VARCHAR(100) NOT NULL,
+    to_location VARCHAR(100) NOT NULL,
+    passenger_count INT NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    aadhar VARCHAR(20) NOT NULL,
+    dob DATE NOT NULL,
+    gender VARCHAR(10) NOT NULL,
+    mobile VARCHAR(15) NOT NULL
+);
+
+
+
+use User_Login;
+select * from passenger_details2;
+
+####second time #####
+CREATE TABLE passenger_details2 (
+    pnr VARCHAR(50) PRIMARY KEY,
+    name VARCHAR(100),
+    flight_number VARCHAR(50),
+    airline VARCHAR(100),
+    travel_date DATE,
+    from_location VARCHAR(100),
+    to_location VARCHAR(100),
+    passenger_count INT,
+    aadhar VARCHAR(12),
+    dob DATE,
+    gender VARCHAR(10),
+    mobile VARCHAR(15)
+);
+
+
+select * from passenger_details2;
+
+CREATE TABLE boarding_pass (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    pnr VARCHAR(10),
+    seat_number VARCHAR(10),
+    issue_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (pnr) REFERENCES passenger_details2(pnr)
+);
+select * from boarding_pass;
