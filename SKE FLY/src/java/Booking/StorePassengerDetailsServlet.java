@@ -21,6 +21,7 @@ public class StorePassengerDetailsServlet extends HttpServlet {
 
         // Retrieve passenger details from session
         String name = (String) session.getAttribute("name");
+        String email = (String) session.getAttribute("email"); // Retrieve email
         String flightNumber = (String) session.getAttribute("flight_number");
         String airline = (String) session.getAttribute("airline");
         java.sql.Date travelDate = (java.sql.Date) session.getAttribute("travel_date");
@@ -40,25 +41,25 @@ public class StorePassengerDetailsServlet extends HttpServlet {
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/User_Login", "root", "Sohail0622")) {
 
             // Insert passenger details into the database
-            String query = "INSERT INTO passenger_details2 (pnr, name, flight_number, airline, travel_date, from_location, to_location, passenger_count, aadhar, dob, gender, mobile) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO passenger_details2 (pnr, name, email, flight_number, airline, travel_date, from_location, to_location, passenger_count, aadhar, dob, gender, mobile) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setString(1, pnrStr); // Set PNR as String
             pstmt.setString(2, name);
-            pstmt.setString(3, flightNumber);
-            pstmt.setString(4, airline);
-            pstmt.setDate(5, travelDate);
-            pstmt.setString(6, fromLocation);
-            pstmt.setString(7, toLocation);
-            pstmt.setInt(8, passengerCount);
-            pstmt.setString(9, aadhar);
-            pstmt.setDate(10, dob);
-            pstmt.setString(11, gender);
-            pstmt.setString(12, mobile);
+            pstmt.setString(3, email != null ? email : "N/A"); // Set email, default to "N/A" if null
+            pstmt.setString(4, flightNumber);
+            pstmt.setString(5, airline);
+            pstmt.setDate(6, travelDate);
+            pstmt.setString(7, fromLocation);
+            pstmt.setString(8, toLocation);
+            pstmt.setInt(9, passengerCount);
+            pstmt.setString(10, aadhar);
+            pstmt.setDate(11, dob);
+            pstmt.setString(12, gender);
+            pstmt.setString(13, mobile);
 
             int rowsAffected = pstmt.executeUpdate();
 
             if (rowsAffected > 0) {
-               
                 response.sendRedirect("index.html"); // Redirect to a confirmation page
             } else {
                 response.getWriter().println("<p>Error saving details</p>");
