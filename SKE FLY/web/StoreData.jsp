@@ -18,21 +18,23 @@
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/User_Login", "root", "Sohail0622");
 
             // Prepare SQL statement to insert passenger details
-            String insertQuery = "INSERT INTO passenger_details2 (name, flight_number, airline, travel_date, from_location, to_location, passenger_count, aadhar, dob, gender, mobile) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String insertQuery = "INSERT INTO passenger_details2 (name, flight_number, airline, travel_date, from_location, to_location, passenger_count, aadhar, dob, gender, mobile, email, amount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             pstmt = conn.prepareStatement(insertQuery);
 
-            // Set parameters from session attributes
-            pstmt.setString(1, (String) session.getAttribute("name"));
-            pstmt.setString(2, (String) session.getAttribute("flight_number"));
-            pstmt.setString(3, (String) session.getAttribute("airline"));
-            pstmt.setDate(4, (Date) session.getAttribute("travel_date"));
-            pstmt.setString(5, (String) session.getAttribute("from_location"));
-            pstmt.setString(6, (String) session.getAttribute("to_location"));
-            pstmt.setInt(7, (Integer) session.getAttribute("passenger_count"));
-            pstmt.setString(8, (String) session.getAttribute("aadhar"));
-            pstmt.setDate(9, (Date) session.getAttribute("dob"));
-            pstmt.setString(10, (String) session.getAttribute("gender"));
-            pstmt.setString(11, (String) session.getAttribute("mobile"));
+            // Set parameters from request parameters
+            pstmt.setString(1, request.getParameter("name"));
+            pstmt.setString(2, request.getParameter("flight_number"));
+            pstmt.setString(3, request.getParameter("airline"));
+            pstmt.setDate(4, Date.valueOf(request.getParameter("travel_date")));
+            pstmt.setString(5, request.getParameter("from_location"));
+            pstmt.setString(6, request.getParameter("to_location"));
+            pstmt.setInt(7, Integer.parseInt(request.getParameter("passenger_count")));
+            pstmt.setString(8, request.getParameter("aadhar"));
+            pstmt.setDate(9, Date.valueOf(request.getParameter("dob")));
+            pstmt.setString(10, request.getParameter("gender"));
+            pstmt.setString(11, request.getParameter("mobile"));
+            pstmt.setString(12, request.getParameter("email"));
+            pstmt.setDouble(13, Double.parseDouble(request.getParameter("amount")));
 
             // Execute the insert
             int rowsAffected = pstmt.executeUpdate();
