@@ -1,188 +1,124 @@
-# SKE-Fly-Airline-management-Application
+Flight-Management-System
+A complete web-based Flight Management System built with Java, JSP, Servlets, MySQL, and Stripe integration for booking flights, user authentication, flight status checks, and more. This project showcases an advanced, real-world implementation of various functionalities such as flight bookings, email notifications, payment processing, and AI chatbot integration.
 
-This project implements a Flight Booking System using Java Servlet, JSP, and MySQL. The system allows users to search for flights, book tickets, and manage their reservations. The application also integrates the **Stripe payment gateway** for processing payments during the booking process.
+Project Overview
+The Flight Management System is designed to manage flight bookings for users. The system enables users to search for flights, make bookings, and receive flight details. It also integrates email functionality for booking confirmation and uses Stripe for secure online payment processing.
 
-### Key Features:
+The project aims to provide a user-friendly interface and a seamless booking experience, along with a chatbot integration to assist with inquiries, improving user engagement.
 
-- **Flight Search**: Users can search for available flights by specifying departure and destination locations, class type, and passenger count.
-- **Passenger Details**: After selecting a flight, users provide their passenger details, including name, Aadhar number, date of birth, gender, and mobile number.
-- **Booking Confirmation**: Once the passenger details are submitted, a confirmation page is displayed with the flight information and total cost.
-- **PNR Check**: Users can check the status of their flight bookings using the PNR (Passenger Name Record) number.
-- **Ticket Cancellation**: Users can cancel their bookings using their PNR number, with the corresponding database entry being removed.
+Technologies Used
+Frontend:
 
-### Technologies Used:
-- **Backend**: Java, Servlet, JSP
-- **Frontend**: HTML, CSS, JSP for dynamic content rendering
-- **Database**: MySQL
-- **Payment Gateway**: Stripe
+HTML, CSS, and JavaScript
+JSP (JavaServer Pages)
+Bootstrap (for responsive design)
+Backend:
 
-## Setup Instructions
+Java (JSP, Servlets)
+MySQL Database
+Stripe API for payment integration
+JavaMail API for email notifications
+Google Dialogflow for Chatbot integration
+Version Control:
 
-### Prerequisites:
+Git (for version control)
+Build Tools:
 
-1. **Java Development Kit (JDK)**: Ensure you have JDK 8 or higher installed.
-2. **Apache Tomcat**: Use Apache Tomcat or another servlet container to deploy the servlets.
-3. **MySQL Database**: Ensure MySQL is installed and running. Create a database called `User_Login` and set up the following tables:
-   - **flights**
-   - **passenger_details**
-   - **passenger_details2**
+Apache Tomcat (for hosting the web application)
+Libraries:
 
-4. **Stripe Account**: You need a Stripe account to integrate the payment gateway. Sign up [here](https://stripe.com) and get your API keys (publishable key and secret key).
-
-### Database Setup:
-
-Run the following SQL commands to set up the database tables:
-
-```sql
-CREATE DATABASE User_Login;
-
-USE User_Login;
-
-CREATE TABLE flights (
-    flight_number VARCHAR(10) PRIMARY KEY,
-    airline VARCHAR(100),
-    departure_airport VARCHAR(100),
-    arrival_airport VARCHAR(100),
-    departure_time DATETIME,
-    eco_price INT,
-    bus_price INT
-);
-
-CREATE TABLE passenger_details (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    flight_number VARCHAR(10),
-    airline VARCHAR(100),
-    travel_date DATE,
-    from_location VARCHAR(100),
-    to_location VARCHAR(100),
-    passenger_count INT,
-    name VARCHAR(100),
-    aadhar VARCHAR(12),
-    dob DATE,
-    gender VARCHAR(10),
-    mobile VARCHAR(15),
-    FOREIGN KEY (flight_number) REFERENCES flights(flight_number)
-);
-
-CREATE TABLE passenger_details2 (
-    pnr VARCHAR(20) PRIMARY KEY,
-    flight_number VARCHAR(10),
-    airline VARCHAR(100),
-    travel_date DATE,
-    from_location VARCHAR(100),
-    to_location VARCHAR(100),
-    passenger_count INT,
-    name VARCHAR(100),
-    aadhar VARCHAR(12),
-    dob DATE,
-    gender VARCHAR(10),
-    mobile VARCHAR(15)
-);
-```
-
-### Stripe Payment Gateway Integration:
-
-The system uses the **Stripe Payment Gateway** to handle payments during the flight booking process. Below is a brief explanation of how the integration works.
-
-1. **Stripe Configuration**:
-   - Set your Stripe API keys (Publishable and Secret keys) in the appropriate places in your Java code.
-   - In the `FlightBookingServlet`, after fetching flight details and calculating the total cost, the system communicates with Stripe’s API to create a payment intent and generate a client secret. This client secret is used to complete the payment on the client-side.
-
-2. **Frontend**:
-   - The **Stripe JavaScript library** is included in the booking confirmation page to handle the frontend part of the payment.
-   - Users enter their payment details (credit/debit card) on a secure Stripe checkout form.
-   - The form communicates with the backend to confirm the payment and proceed with the booking.
-
-3. **Backend**:
-   - The backend communicates with the **Stripe API** to create a payment intent and confirm the payment.
-   - Once the payment is successful, the booking is finalized and saved to the database, and a confirmation message is displayed to the user.
-
-#### Example of Stripe Integration in `FlightBookingServlet.java`:
-
-```java
-// Stripe Configuration
-String stripeSecretKey = "your-secret-key";
-Stripe.apiKey = stripeSecretKey;
-
-// Create a payment intent
-Map<String, Object> paymentIntentParams = new HashMap<>();
-paymentIntentParams.put("amount", totalPrice * 100);  // Stripe expects amount in cents
-paymentIntentParams.put("currency", "usd");
-
-PaymentIntent paymentIntent = PaymentIntent.create(paymentIntentParams);
-
-// Pass the client secret to the frontend
-String clientSecret = paymentIntent.getClientSecret();
-request.setAttribute("clientSecret", clientSecret);
-```
-
-In the frontend (JSP page), the client secret is used to confirm the payment:
-
-```html
-<script src="https://js.stripe.com/v3/"></script>
-<script>
-  var stripe = Stripe('your-publishable-key');
-  var clientSecret = '${clientSecret}';
-
-  var elements = stripe.elements();
-  var card = elements.create('card');
-  card.mount('#card-element');
-
-  var form = document.getElementById('payment-form');
-  form.addEventListener('submit', function(event) {
-    event.preventDefault();
-
-    stripe.confirmCardPayment(clientSecret, {
-      payment_method: {
-        card: card,
-        billing_details: {
-          name: 'Customer Name'
-        }
-      }
-    }).then(function(result) {
-      if (result.error) {
-        // Show error message to the user
-      } else {
-        // Payment succeeded, save booking details
-      }
-    });
-  });
-</script>
-```
-
-## File Structure:
-
-```
-/src
-  /Booking
-    FlightBookingServlet.java
-    PassengerDetailsServlet.java
-    PNRCheckServlet.java
-    CancelTicketServlet.java
-    ...
-/webapp
-  /WEB-INF
-    web.xml
-  /jsp
-    BookFlight.jsp
-    CancelTicket.jsp
-    PNRCheck.jsp
-    ...
-```
-
-## Usage:
-
-1. **Start the Tomcat Server**: Deploy the project to your Tomcat server.
-2. **Access the Application**: Open a web browser and go to `http://localhost:8080/` (or the relevant address based on your server setup).
-3. **Flight Search**: Use the flight search functionality to find available flights.
-4. **Booking & Payment**: Once a flight is selected, enter passenger details and proceed to payment using the Stripe gateway.
-5. **PNR Check**: Use the PNR to check your booking details.
-6. **Cancel Ticket**: If needed, cancel your booking using the PNR.
-
-## Conclusion:
-
-This project demonstrates the integration of a **Flight Booking System** with a **Stripe Payment Gateway**, allowing users to search flights, book tickets, and make secure payments online. The system also includes features for managing bookings and cancellations using a PNR.
-
----
-
-Feel free to add any additional sections or modify the content to better suit your project details!
+Stripe.js (for handling Stripe payments)
+jQuery (for AJAX requests)
+Features
+1. User Authentication and Session Management
+Users can register and log in to manage their bookings.
+Session management ensures secure access to booking pages.
+2. Flight Search and Booking
+Users can search for flights based on departure and arrival cities, travel date, class (economy/business), and the number of passengers.
+The system displays available flights with detailed information like flight number, airline, and departure time.
+3. Passenger Details Collection
+After selecting a flight, users input personal details for each passenger, including name, email, mobile number, Aadhaar, date of birth, and gender.
+4. Email Integration
+Upon successful flight booking, the system sends a confirmation email to the user with booking details.
+The email functionality is implemented using JavaMail API for sending automated booking confirmation emails to users.
+5. Stripe Payment Integration
+Secure payment handling using Stripe API.
+The total booking price is calculated dynamically based on the selected flight and passenger details, and users can complete the payment process directly via Stripe’s secure checkout system.
+6. AI Chatbot Integration
+An AI-powered chatbot helps users with flight-related inquiries, providing instant support and answers to frequently asked questions.
+Google Dialogflow was used to integrate the chatbot into the system, improving user interaction and engagement.
+7. Flight Status Check
+Users can check the status of flights using flight numbers to see real-time information about departures, arrivals, and delays.
+8. Responsive Design
+The system features a responsive design that adapts to various screen sizes, making it accessible on both desktop and mobile devices.
+How to Run
+Prerequisites:
+JDK (Java Development Kit): Version 8 or later
+MySQL Database: Installed and running
+Apache Tomcat: Version 9 or later
+Stripe Account: To configure payment API keys
+Steps:
+Clone the repository:
+git clone https://github.com/khansohailahmed/flight-management-system.git
+Navigate to the project directory:
+cd flight-management-system
+Configure your MySQL database by running the SQL script provided in the db folder.
+Deploy the application to Apache Tomcat by copying the project files into the webapps directory.
+Configure your Stripe API keys and JavaMail credentials in the web.xml and relevant Servlet classes.
+Start your Apache Tomcat server.
+Open a web browser and visit http://localhost:8080/ to access the application.
+Project Structure
+/flight-management-system
+├── /src
+│   ├── /servlets
+│   │   ├── FlightBookingServlet.java
+│   │   ├── UserLoginServlet.java
+│   │   ├── PaymentServlet.java
+│   │   └── ...
+│   ├── /db
+│   │   ├── schema.sql
+│   │   └── ...
+│   ├── /jsp
+│   │   ├── BookFlight.jsp
+│   │   ├── UserLogin.jsp
+│   │   └── ...
+│   └── /utils
+│       └── EmailUtils.java
+│       └── PaymentUtils.java
+├── /webapps
+│   └── /flight-management-system
+└── /resources
+    └── /chatbot
+        ├── dialogflow.json
+        └── ...
+Skills Showcased
+Full-Stack Development: Experience in designing and building a complete flight booking system using Java, JSP, Servlets, and MySQL.
+Payment Gateway Integration: Implemented Stripe API for secure and seamless payment processing.
+Email Integration: Used JavaMail API to send automated email notifications, including flight booking confirmations.
+AI Chatbot: Integrated an AI-powered chatbot using Google Dialogflow, offering real-time customer support and handling flight-related queries.
+Responsive Design: Ensured the system is mobile-friendly and performs well across all screen sizes using CSS and Bootstrap.
+Database Management: Created and managed a MySQL database schema to store user and flight data effectively.
+User Authentication: Implemented login and registration features using sessions to ensure secure access to the application.
+Error Handling and Validation: Incorporated client-side and server-side validation to prevent issues like incorrect booking or form submissions.
+Acknowledgements
+Stripe for providing a secure and easy-to-use payment gateway.
+Google Dialogflow for the AI chatbot integration.
+JavaMail API for automating email notifications.
+About
+No description, website, or topics provided.
+Resources
+ Readme
+ Activity
+Stars
+ 0 stars
+Watchers
+ 1 watching
+Forks
+ 0 forks
+Releases
+No releases published
+Create a new release
+Packages
+No packages published
+Publish your first package
+Footer
