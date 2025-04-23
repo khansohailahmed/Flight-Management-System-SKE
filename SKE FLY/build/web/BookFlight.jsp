@@ -1,36 +1,34 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
 <% 
-    // Check if the user is logged in
-    Boolean isLoggedIn = (Boolean) session.getAttribute("isLoggedIn"); 
-    if (isLoggedIn == null || !isLoggedIn) { 
+// Check if the user is logged in 
+Boolean isLoggedIn = (Boolean) session.getAttribute("isLoggedIn"); 
+if (isLoggedIn == null || !isLoggedIn) { 
 %>
-    <script> 
-        alert("Please login to proceed with booking a flight."); 
-        window.location.href = "Userlogin.jsp"; // Redirect to login page 
-    </script>
+<script> 
+    alert("Please login to proceed with booking a flight."); 
+    window.location.href = "Userlogin.jsp"; // Redirect to login page 
+</script>
 <% 
     return; // Stop further processing 
 } 
 %>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Flight</title>
-    <script src="https://js.stripe.com/v3/"></script>
-    <style>
-        /* Your existing CSS styles */
-        body {
-            font-family: 'Roboto', Arial, sans-serif;
-            background: #ffffff; /* Set plain white background */
-            margin: 0;
-            padding: 0;
-            color: #333;
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>Book Flight</title> 
+    <script src="https://js.stripe.com/v3/"></script> 
+    <style> 
+        /* Your existing CSS styles */ 
+        body { 
+            font-family: 'Roboto', Arial, sans-serif; 
+            background: #ffffff; 
+            margin: 0; 
+            padding: 0; 
+            color: #333; 
         }
-
         .container {
             max-width: 750px;
             margin: 40px auto;
@@ -39,25 +37,21 @@
             border-radius: 12px;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
         }
-
         h2 {
             text-align: center;
             color: #333;
             font-size: 1.8em;
             margin-bottom: 20px;
         }
-
         .form-group {
             margin-bottom: 20px;
         }
-
         .form-group label {
             font-size: 1em;
             color: #444;
             display: block;
             margin-bottom: 8px;
         }
-
         input, select, button {
             width: 100%;
             padding: 12px;
@@ -67,15 +61,13 @@
             transition: all 0.3s ease;
             box-sizing: border-box;
         }
-
         input:focus, select:focus {
             border-color: #4facfe;
             outline: none;
             box-shadow: 0 0 6px rgba(79, 172, 254, 0.6);
         }
-
         button {
-            background-color: #28a745; /* Set buttons to green */
+            background-color: #28a745; 
             color: white;
             font-size: 1em;
             font-weight: bold;
@@ -83,14 +75,12 @@
             border: none;
             margin-top: 10px;
             transition: all 0.3s ease;
-            border-radius: 8px; /* Added for rounded button corners */
+            border-radius: 8px; 
         }
-
         button:hover {
-            background-color: #218838; /* Slightly darker green for hover effect */
+            background-color: #218838; 
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
-
         .extra-details, .price-details {
             margin-top: 20px;
             padding: 15px;
@@ -98,97 +88,139 @@
             border-radius: 8px;
             border: 1px solid #e1e1e1;
         }
-
         .price-details h3 {
             text-align: center;
             color: #555;
             font-size: 1.2em;
         }
-
         .price-details p {
             text-align: center;
             font-size: 1em;
             color: #333;
             margin: 8px 0;
         }
-
         .extra-details h3 {
             color: #444;
             font-size: 1.2em;
             margin-bottom: 10px;
         }
-
         .form-group p {
             font-size: 0.9em;
             color: #555;
             margin-top: 5px;
         }
-
         @media (max-width: 768px) {
             .container {
                 padding: 15px;
             }
-
             h2 {
                 font-size: 1.5em;
             }
-
             input, select, button {
                 font-size: 0.9em;
                 padding: 10px;
             }
         }
     </style>
-</head>
-<body>
-    <div class="container">
-        <h2>Book Flight</h2>
-        <form id="flightForm" action=" FlightBookingServlet" method="post">
-            <div class="form-group">
-                <label for="from">From:</label>
-                <select id="from" name="from" required>
-                    <option value="Mumbai" <%= "Mumbai".equals(request.getParameter("from")) ? "selected" : ""%>>Mumbai</option>
-                    <option value="Delhi" <%= "Delhi".equals(request.getParameter("from")) ? "selected" : ""%>>Delhi</option>
-                    <option value="Bangalore" <%= "Bangalore".equals(request.getParameter("from")) ? "selected" : ""%>>Bangalore</option>
-                    <option value="Kolkata" <%= "Kolkata".equals(request.getParameter("from")) ? "selected" : ""%>>Kolkata</option>
-                    <option value="Chennai" <%= "Chennai".equals(request.getParameter("from")) ? "selected" : ""%>>Chennai</option>
-                    <option value="Pune" <%= "Pune".equals(request.getParameter("from")) ? "selected" : ""%>>Pune</option>
-                    <option value="Goa" <%= "Goa".equals(request.getParameter("from")) ? "selected" : ""%>>Goa</option>
-                    <option value="Hyderabad" <%= "Hyderabad".equals(request.getParameter("from")) ? "selected" : ""%>>Hyderabad</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="to">To:</label>
-                <select id="to" name="to" required>
-                    <option value="Mumbai" <%= "Mumbai".equals(request.getParameter("to")) ? "selected" : ""%>>Mumbai</option>
-                    <option value="Delhi" <%= "Delhi".equals(request.getParameter("to")) ? "selected" : ""%>>Delhi</option>
-                    <option value="Bangalore" <%= "Bangalore".equals(request.getParameter("to")) ? "selected" : ""%>>Bangalore</option>
-                    <option value="Kolkata" <%= "Kolkata".equals(request.getParameter("to")) ? "selected" : ""%>>Kolkata</option>
-                    <option value="Chennai" <%= "Chennai".equals(request.getParameter("to")) ? "selected" : ""%>>Chennai</option>
-                    <option value="Pune" <%= "Pune".equals(request.getParameter("to")) ? "selected" : ""%>>Pune</option>
-                    <option value="Goa" <%= "Goa".equals(request.getParameter("to")) ? "selected" : ""%>>Goa</option>
-                    <option value="Hyderabad" <%= "Hyderabad".equals(request.getParameter("to")) ? "selected" : ""%>>Hyderabad</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <input type="date" id="travelDate" name="travelDate" value="<%= request.getParameter("travelDate") != null ? request.getParameter("travelDate") : ""%>" required>
-            </div>
-            <div class="form-group">
-                <label for="class">Class:</label>
-                <select id="class" name="class" required>
-                    <option value="Economy" <%= "Economy".equals(request.getParameter("class")) ? "selected" : ""%>>Economy</option>
-                    <option value="Business" <%= "Business".equals(request.getParameter("class")) ? "selected" : ""%>>Business</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="passengerCount">Passengers:</label>
-                <input type="number" id="passengerCount" name="passengerCount" value="<%= request.getParameter("passengerCount") != null ? request.getParameter("passengerCount") : ""%>" min="1" max="6" required>
-            </div>
-            <div class="form-group">
-                <button type="submit">Fetch Flights</button>
-            </div>
+</head> 
+<body> 
+    <div class="container"> 
+        <h2>Book Flight</h2> 
+        <form id="flightForm" action="FlightBookingServlet" method="post"> 
+            <div class="form-group"> 
+                <label for="from">From:</label> 
+                <select id="from" name="from" required> 
+                    <option value="Mumbai" <%= "Mumbai".equals(request.getParameter("from")) ? "selected" : ""%>>Mumbai</option> 
+                    <option value="Delhi" <%= "Delhi".equals(request.getParameter("from")) ? "selected" : ""%>>Delhi</option> 
+                    <option value="Bangalore" <%= "Bangalore".equals(request.getParameter("from")) ? "selected" : ""%>>Bangalore</option> 
+                    <option value="Kolkata" <%= "Kolkata".equals(request.getParameter("from")) ? "selected" : ""%>>Kolkata</option> 
+                    <option value="Chennai" <%= "Chennai".equals(request.getParameter("from")) ? "selected" : ""%>>Chennai</option> 
+                    <option value="Pune" <%= "Pune".equals(request.getParameter("from")) ? "selected" : ""%>>Pune</option> 
+                    <option value="Goa" <%= "Goa".equals(request.getParameter("from")) ? "selected" : ""%>>Goa</option> 
+                    <option value="Hyderabad" <%= "Hyderabad".equals(request.getParameter("from")) ? "selected" : ""%>>Hyderabad</option> 
+                    <option value="Lucknow" <%= "Lucknow".equals(request.getParameter("from")) ? "selected" : ""%>>Lucknow</option> 
+                    <option value="Ahmedabad" <%= "Ahmedabad".equals(request.getParameter("from")) ? "selected" : ""%>>Ahmedabad</option> 
+                    <option value="Kochi" <%= "Kochi".equals(request.getParameter("from")) ? "selected" : ""%>>Kochi</option> 
+                    <option value="Dubai" <%= "Dubai".equals(request.getParameter("from")) ? "selected" : ""%>>Dubai</option> 
+                    <option value="London" <%= "London".equals(request.getParameter("from")) ? "selected" : ""%>>London</option> 
+                    <option value="Singapore" <%= "Singapore".equals(request.getParameter("from")) ? "selected" : ""%>>Singapore</option> 
+                    <option value="Bangkok" <%= "Bangkok".equals(request.getParameter("from")) ? "selected" : ""%>>Bangkok</option> 
+                    <option value="Chicago" <%= "Chicago".equals(request.getParameter("from")) ? "selected" : ""%>>Chicago</option> 
+                    <option value="Colombo" <%= "Colombo".equals(request.getParameter("from")) ? "selected" : ""%>>Colombo</option> 
+                    <option value="Doha" <%= "Doha".equals(request.getParameter("from")) ? "selected" : ""%>>Doha</option> 
+                    <option value="Muscat" <%= "Muscat".equals(request.getParameter("from")) ? "selected" : ""%>>Muscat</option> 
+                    <option value="Paris" <%= "Paris".equals(request.getParameter("from")) ? "selected" : ""%>>Paris</option> 
+                    <option value="Abu Dhabi" <%= "Abu Dhabi".equals(request.getParameter("from")) ? "selected" : ""%>>Abu Dhabi</option> 
+                    <option value="Kuala Lumpur" <%= "Kuala Lumpur".equals(request.getParameter("from")) ? "selected" : ""%>>Kuala Lumpur</option> 
+                    <option value="Hong Kong" <%= "Hong Kong".equals(request.getParameter("from")) ? "selected" : ""%>>Hong Kong</option> 
+                    <option value="New York" <%= "New York".equals(request.getParameter("from")) ? "selected" : ""%>>New York</option> 
+                    <option value="Toronto" <%= "Toronto".equals(request.getParameter("from")) ? "selected" : ""%>>Toronto</option> 
+                    <option value="Frankfurt" <%= "Frankfurt".equals(request.getParameter("from")) ? "selected" : ""%>>Frankfurt</option> 
+                    <option value="Male" <%= "Male".equals(request.getParameter("from")) ? "selected" : ""%>>Male</option> 
+                    <option value="Jeddah" <%= "Jeddah".equals(request.getParameter("from")) ? "selected" : ""%>>Jeddah</option> 
+                    <option value="Amsterdam" <%= "Amsterdam".equals(request.getParameter("from")) ? "selected" : ""%>>Amsterdam</option> 
+                    <option value="San Francisco" <%= "San Francisco".equals(request.getParameter("from")) ? "selected" : ""%>>San Francisco</option> 
+                    <option value="Sharjah" <%= "Sharjah".equals(request.getParameter("from")) ? "selected" : ""%>>Sharjah</option> 
+                    <option value="Zurich" <%= "Zurich".equals(request.getParameter("from")) ? "selected" : ""%>>Zurich</option> 
+                    <option value="Rome" <%= "Rome".equals(request.getParameter("from")) ? "selected" : ""%>>Rome</option> 
+                </select> 
+            </div> 
+            <div class="form-group"> 
+                <label for="to">To:</label> 
+                <select id="to" name="to" required> 
+                    <option value="Mumbai" <%= "Mumbai".equals(request.getParameter("to")) ? "selected" : ""%>>Mumbai</option> 
+                    <option value="Delhi" <%= "Delhi".equals(request.getParameter("to")) ? "selected" : ""%>>Delhi</option> 
+                    <option value="Bangalore" <%= "Bangalore".equals(request.getParameter("to")) ? "selected" : ""%>>Bangalore</option> 
+                    <option value="Kolkata" <%= "Kolkata".equals(request.getParameter("to")) ? "selected" : ""%>>Kolkata</option> 
+                    <option value="Chennai" <%= "Chennai".equals(request.getParameter("to")) ? "selected" : ""%>>Chennai</option> 
+                    <option value="Pune" <%= "Pune".equals(request.getParameter("to")) ? "selected" : ""%>>Pune</option> 
+                    <option value="Goa" <%= "Goa".equals(request.getParameter("to")) ? "selected" : ""%>>Goa</option> 
+                    <option value="Hyderabad" <%= "Hyderabad".equals(request.getParameter("to")) ? "selected" : ""%>>Hyderabad</option> 
+                    <option value="Lucknow" <%= "Lucknow".equals(request.getParameter("to")) ? "selected" : ""%>>Lucknow</option> 
+                    <option value="Ahmedabad" <%= "Ahmedabad".equals(request.getParameter("to")) ? "selected" : ""%>>Ahmedabad</option> 
+                    <option value="Kochi" <%= "Kochi".equals(request.getParameter("to")) ? "selected" : ""%>>Kochi</option> 
+                    <option value="Dubai" <%= "Dubai".equals(request.getParameter("to")) ? "selected" : ""%>>Dubai</option> 
+                    <option value="London" <%= "London".equals(request.getParameter("to")) ? "selected" : ""%>>London</option> 
+                    <option value="Singapore" <%= "Singapore".equals(request.getParameter("to")) ? "selected" : ""%>>Singapore</option> 
+                    <option value="Bangkok" <%= "Bangkok".equals(request.getParameter("to")) ? "selected" : ""%>>Bangkok</option> 
+                    <option value="Chicago" <%= "Chicago".equals(request.getParameter("to")) ? "selected" : ""%>>Chicago</option> 
+                    <option value="Colombo" <%= "Colombo".equals(request.getParameter("to")) ? "selected" : ""%>>Colombo</option> 
+                    <option value="Doha" <%= "Doha".equals(request.getParameter("to")) ? "selected" : ""%>>Doha</option> 
+                    <option value="Muscat" <%= "Muscat".equals(request.getParameter("to")) ? "selected" : ""%>>Muscat</option> 
+                    <option value="Paris" <%= "Paris".equals(request.getParameter("to")) ? "selected" : ""%>>Paris</option> 
+                    <option value="Abu Dhabi" <%= "Abu Dhabi".equals(request.getParameter("to")) ? "selected" : ""%>>Abu Dhabi</option> 
+                    <option value="Kuala Lumpur" <%= "Kuala Lumpur".equals(request.getParameter("to")) ? "selected" : ""%>>Kuala Lumpur</option> 
+                    <option value="Hong Kong" <%= "Hong Kong".equals(request.getParameter("to")) ? "selected" : ""%>>Hong Kong</option> 
+                    <option value="New York" <%= "New York".equals(request.getParameter("to")) ? "selected" : ""%>>New York</option> 
+                    <option value="Toronto" <%= "Toronto".equals(request.getParameter("to")) ? "selected" : ""%>>Toronto</option> 
+                    <option value=" Frankfurt" <%= "Frankfurt".equals(request.getParameter("to")) ? "selected" : ""%>>Frankfurt</option> 
+                    <option value="Male" <%= "Male".equals(request.getParameter("to")) ? "selected" : ""%>>Male</option> 
+                    <option value="Jeddah" <%= "Jeddah".equals(request.getParameter("to")) ? "selected" : ""%>>Jeddah</option> 
+                    <option value="Amsterdam" <%= "Amsterdam".equals(request.getParameter("to")) ? "selected" : ""%>>Amsterdam</option> 
+                    <option value="San Francisco" <%= "San Francisco".equals(request.getParameter("to")) ? "selected" : ""%>>San Francisco</option> 
+                    <option value="Sharjah" <%= "Sharjah".equals(request.getParameter("to")) ? "selected" : ""%>>Sharjah</option> 
+                    <option value="Zurich" <%= "Zurich".equals(request.getParameter("to")) ? "selected" : ""%>>Zurich</option> 
+                    <option value="Rome" <%= "Rome".equals(request.getParameter("to")) ? "selected" : ""%>>Rome</option> 
+                </select> 
+            </div> 
+            <div class="form-group"> 
+                <input type="date" id="travelDate" name="travelDate" value="<%= request.getParameter("travelDate") != null ? request.getParameter("travelDate") : ""%>" required> 
+            </div> 
+            <div class="form-group"> 
+                <label for="class">Class:</label> 
+                <select id="class" name="class" required> 
+                    <option value="Economy" <%= "Economy".equals(request.getParameter("class")) ? "selected" : ""%>>Economy</option> 
+                    <option value="Business" <%= "Business".equals(request.getParameter("class")) ? "selected" : ""%>>Business</option> 
+                </select> 
+            </div> 
+            <div class="form-group"> 
+                <label for="passengerCount">Passengers:</label> 
+                <input type="number" id="passengerCount" name="passengerCount" value="<%= request.getParameter("passengerCount") != null ? request.getParameter("passengerCount") : ""%>" min="1" max="6" required> 
+            </div> 
+            <div class="form-group"> 
+                <button type="submit">Fetch Flights</button> 
+            </div> 
         </form>
-
         <%
             String flightSearchStatus = (String) request.getAttribute("flightSearchStatus");
             String flightNumber = (String) request.getAttribute("flightNumber");
@@ -329,5 +361,5 @@
 
         <% } %>
     </div>
-</body>
+</body> 
 </html>
